@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['SetLocal']], function () {
     // Include Auth Routes
     Route::apiResource('subscription-plans', SubscriptionPlanController::class);
+    Route::patch('subscription-plans/{subscription_plan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus']);
+
 
     Route::post('/users/{user}/assign-subscription', [UserController::class, 'assignSubscription']);
     Route::get('/users/{user}/current-subscription', [UserController::class, 'showCurrentSubscription']);

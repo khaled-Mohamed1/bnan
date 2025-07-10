@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubscriptionPlan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +39,7 @@ class SubscriptionPlan extends Model
         'role_management',
         'rule_engine',
         'is_default',
+        'is_trial'
     ];
 
     /**
@@ -57,6 +58,7 @@ class SubscriptionPlan extends Model
         'role_management' => 'boolean',
         'rule_engine' => 'boolean',
         'is_default' => 'boolean',
+        'is_trial' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

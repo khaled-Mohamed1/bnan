@@ -45,6 +45,7 @@ class StoreSubscriptionPlanRequest extends FormRequest
             'role_management' => ['nullable', 'boolean'],
             'rule_engine' => ['nullable', 'boolean'],
             'is_default' => ['nullable', 'boolean'],
+            'is_trial' => ['nullable', 'boolean'],
         ];
     }
 

@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('subscription_plan_id')->constrained('subscription_plans')->onDelete('restrict');
+            $table->integer('ols_device_limit')->nullable();
             $table->timestamp('start_date');
             $table->timestamp('end_date')->nullable();
-            $table->enum('status', ['active', 'pending', 'cancelled', 'expired', 'trial'])->default('active');
+            $table->enum('status', ['active', 'pending', 'expired'])->default('active');
+            $table->enum('renewal_option', ['manual', 'auto'])->default('auto');
             $table->integer('effective_device_limit')->nullable();
             $table->integer('effective_user_limit')->nullable();
             $table->integer('effective_max_dashboards')->nullable();

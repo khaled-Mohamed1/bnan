@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SubscriptionPlan\StoreSubscriptionPlanRequest;
 use App\Http\Requests\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use App\Http\Resources\SubscriptionPlan\SubscriptionPlanResource;
+use App\Http\Resources\SubscriptionPlan\SubscriptionPlanShowResource;
 use App\Models\SubscriptionPlan;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -59,7 +60,7 @@ class SubscriptionPlanController extends Controller
                 $query->where('subscription_tier', $tier);
             } else {
                 throw ValidationException::withMessages([
-                    'subscription_tier' => __('MSG-17'),
+                    'subscription_tier' => __('MSG-18'),
                 ]);
             }
         }
@@ -80,14 +81,14 @@ class SubscriptionPlanController extends Controller
             }
         } else {
             throw ValidationException::withMessages([
-                'sort_by' => 'Invalid sort column. ' . __('MSG-18'),
+                'sort_by' => 'Invalid sort column. ' . __('messages.MSG-18'),
             ]);
         }
 
         $plans = $query->paginate(10);
 
         if ($plans->isEmpty()) {
-            return $this->successResponse(null, __('MSG-23'));
+            return $this->successResponse(null, __('messages.MSG-21'));
         }
 
         return $this->successResponse([
@@ -115,11 +116,11 @@ class SubscriptionPlanController extends Controller
             $plan = SubscriptionPlan::create($request->validated());
 
             DB::commit();
-            return $this->successResponse(new SubscriptionPlanResource($plan), __('MSG-16'), 201);
+            return $this->successResponse(new SubscriptionPlanResource($plan), __('messages.MSG-17'), 201);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('SubscriptionPlanController@store' . $e->getMessage());
-            return $this->errorResponse(__('MSG-17'));
+            return $this->errorResponse(__('messages.MSG-18'));
         }
     }
 
@@ -130,7 +131,7 @@ class SubscriptionPlanController extends Controller
     {
         $subscriptionPlan->loadCount('userSubscriptions');
 
-        return $this->successResponse(new SubscriptionPlanResource($subscriptionPlan), 'Subscription plan details retrieved successfully.');
+        return $this->successResponse(new SubscriptionPlanShowResource($subscriptionPlan), 'Subscription plan details retrieved successfully.');
     }
 
     /**
@@ -153,7 +154,7 @@ class SubscriptionPlanController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('SubscriptionPlanController@update' . $e->getMessage());
-            return $this->errorResponse(__('MSG-17'));
+            return $this->errorResponse(__('messages.MSG-18'));
         }
     }
 
@@ -167,11 +168,28 @@ class SubscriptionPlanController extends Controller
         }
 
         if ($subscriptionPlan->isInUse()) {
-            return $this->errorResponse(__('MSG-21'), 403);
+            return $this->errorResponse(__('messages.MSG-22'), 403);
         }
 
         $subscriptionPlan->delete();
 
         return $this->successResponse(null, 'Subscription plan deleted successfully.');
+    }
+
+    public function toggleStatus(SubscriptionPlan $subscriptionPlan): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $subscriptionPlan->is_active = !$subscriptionPlan->is_active;
+            $subscriptionPlan->save();
+
+            DB::commit();
+
+            return $this->successResponse(new SubscriptionPlanResource($subscriptionPlan->fresh()), 'Subscription plan updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('SubscriptionPlanController@toggleStatus' . $subscriptionPlan->id . ': ' . $e->getMessage());
+            return $this->errorResponse(__('messages.MSG-18'));
+        }
     }
 }
