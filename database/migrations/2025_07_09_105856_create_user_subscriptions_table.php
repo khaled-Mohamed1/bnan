@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('user_subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('user_name')->nullable();
+            $table->string('user_email')->nullable();
             $table->foreignId('subscription_plan_id')->constrained('subscription_plans')->onDelete('restrict');
             $table->integer('ols_device_limit')->nullable();
             $table->timestamp('start_date');
