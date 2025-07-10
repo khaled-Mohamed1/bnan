@@ -15,6 +15,8 @@ class UserSubscription extends Model
         'start_date',
         'end_date',
         'status',
+        'user_name',
+        'user_email',
         'ols_device_limit',
         'renewal_option',
         'effective_device_limit',

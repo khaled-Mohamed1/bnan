@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name', 50)->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2)->default(0.00);
-            $table->integer('duration_days')->default(30);
-            $table->integer('device_limit')->default(2);
+            $table->integer('duration_days')->default(30);// days of plans      
+            $table->integer('device_limit')->default(2); //  
             $table->integer('user_limit')->default(2);
             $table->enum('subscription_type', ['Weekly', 'Monthly', 'Annual'])->default('Monthly');
             $table->enum('subscription_tier', ['Free', 'Basic', 'Pro', 'Enterprise'])->default('Free');

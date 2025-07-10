@@ -12,8 +12,12 @@ Route::group(['middleware' => ['SetLocal']], function () {
     Route::patch('subscription-plans/{subscription_plan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus']);
 
 
-    Route::post('/users/{user}/assign-subscription', [UserController::class, 'assignSubscription']);
-    Route::get('/users/{user}/current-subscription', [UserController::class, 'showCurrentSubscription']);
+    Route::post('/users/assign-subscription', [UserController::class, 'assignSubscription']);
+    Route::get('/users/current-subscription/{user_subscription}', [UserController::class, 'showCurrentSubscription']);
+    Route::get('/users/current-subscription', [UserController::class, 'indexCurrentSubscription']);
+
+
+    
 });
 
 
